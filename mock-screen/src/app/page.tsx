@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface User {
   id: string;
@@ -10,14 +11,17 @@ interface User {
 }
 
 const HomePage = () => {
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
+      // Redirect logged-in users to chatbot
+      router.push('/chatbot');
     }
-  }, []);
+  }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -97,9 +101,12 @@ const HomePage = () => {
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 max-w-2xl mx-auto">
               <h3 className="text-2xl font-bold text-white mb-4">Ready to Chat?</h3>
               <p className="text-gray-300 mb-6">Your chatbot is ready to assist you with any questions or tasks.</p>
-              <button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 rounded-lg font-medium transition-all transform hover:scale-105">
+              <Link
+                href="/chatbot"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 rounded-lg font-medium transition-all transform hover:scale-105 inline-block"
+              >
                 Start Chatting
-              </button>
+              </Link>
             </div>
           )}
         </div>

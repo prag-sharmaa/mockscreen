@@ -53,7 +53,7 @@ const LoginPage = () => {
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
 
-      router.push('/');
+      router.push('/chatbot');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
