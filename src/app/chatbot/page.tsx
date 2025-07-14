@@ -266,7 +266,7 @@ const ChatbotPage = () => {
           </div>
         </div>
 
-        {/* Centered Heading and Search Bar */}
+        {/* Centered Heading */}
         <div className="flex-1 flex flex-col items-center justify-center">
           <div className="w-full max-w-xl flex flex-col items-center">
             <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-2">
@@ -275,65 +275,6 @@ const ChatbotPage = () => {
             <h2 className="text-2xl md:text-3xl font-bold text-center mb-6">
               Our <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">AI answer engine</span> can help.
             </h2>
-            <form onSubmit={handleSendMessage} className="w-full flex items-center bg-gray-100 rounded-xl shadow px-4 py-2 mb-8">
-              {/* File Upload Button */}
-              <button
-                type="button"
-                onClick={handleFileUpload}
-                className="p-2 text-gray-400 hover:text-purple-600 transition-colors"
-                title="Attach file"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                </svg>
-              </button>
-              {/* Hidden file input */}
-              <input
-                ref={fileInputRef}
-                type="file"
-                onChange={handleFileSelect}
-                className="hidden"
-                accept="*/*"
-              />
-              <input
-                type="text"
-                value={currentMessage}
-                onChange={(e) => setCurrentMessage(e.target.value)}
-                placeholder="Please ask a question or initiate a search."
-                className="flex-1 bg-transparent border-none outline-none px-4 py-3 text-gray-900 placeholder-gray-400"
-                disabled={isLoading}
-              />
-              <button
-                type="submit"
-                disabled={(!currentMessage.trim() && !selectedFile) || isLoading}
-                className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ml-2"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </button>
-            </form>
-            {/* Selected file indicator */}
-            {selectedFile && (
-              <div className="w-full mb-4 bg-purple-50 rounded-lg p-2 border border-purple-200 shadow flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span className="text-sm text-gray-900">{selectedFile.name}</span>
-                  <span className="text-xs text-gray-400">({(selectedFile.size / 1024).toFixed(1)} KB)</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={removeSelectedFile}
-                  className="text-gray-400 hover:text-red-400 transition-colors"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            )}
           </div>
         </div>
 
@@ -386,6 +327,71 @@ const ChatbotPage = () => {
               </div>
             </div>
           )}
+        </div>
+
+        {/* Fixed Bottom Bar for Input/Search and File Upload */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-10 shadow-lg">
+          <form onSubmit={handleSendMessage} className="flex space-x-4 max-w-3xl mx-auto">
+            {/* File Upload Button */}
+            <button
+              type="button"
+              onClick={handleFileUpload}
+              className="p-3 text-gray-400 hover:text-purple-600 transition-colors"
+              title="Attach file"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+              </svg>
+            </button>
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              onChange={handleFileSelect}
+              className="hidden"
+              accept="*/*"
+            />
+            <div className="flex-1 relative">
+              <input
+                type="text"
+                value={currentMessage}
+                onChange={(e) => setCurrentMessage(e.target.value)}
+                placeholder="Please ask a question or initiate a search."
+                className="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent shadow"
+                disabled={isLoading}
+              />
+              {/* Selected file indicator */}
+              {selectedFile && (
+                <div className="absolute -top-12 left-0 right-0 bg-purple-50 rounded-lg p-2 border border-purple-200 shadow flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="text-sm text-gray-900">{selectedFile.name}</span>
+                    <span className="text-xs text-gray-400">({(selectedFile.size / 1024).toFixed(1)} KB)</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={removeSelectedFile}
+                    className="text-gray-400 hover:text-red-400 transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </div>
+            <button
+              type="submit"
+              disabled={(!currentMessage.trim() && !selectedFile) || isLoading}
+              className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg font-medium transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+          </form>
         </div>
       </div>
     </div>
