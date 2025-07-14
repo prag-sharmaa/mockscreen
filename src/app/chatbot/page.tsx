@@ -186,17 +186,17 @@ const ChatbotPage = () => {
   }
 
   return (
-    <div className="h-screen bg-slate-900 flex">
+    <div className="h-screen bg-white flex">
       {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'w-80' : 'w-0'} bg-slate-800 border-r border-slate-700 transition-all duration-300 overflow-hidden`}>
+      <div className={`${sidebarOpen ? 'w-80' : 'w-0'} bg-gray-50 border-r border-gray-200 transition-all duration-300 overflow-hidden shadow-md`}>
         <div className="h-full flex flex-col">
           {/* Sidebar Header */}
-          <div className="p-4 border-b border-slate-700">
+          <div className="p-4 border-b border-gray-200">
             <div className="flex items-center justify-between">
-              <h2 className="text-white font-semibold">Chat History</h2>
+              <h2 className="text-gray-900 font-semibold">Chat History</h2>
               <button
                 onClick={createNewChat}
-                className="p-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors"
+                className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-lg transition-colors"
               >
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -213,8 +213,8 @@ const ChatbotPage = () => {
                 onClick={() => selectChat(chat)}
                 className={`p-3 rounded-lg cursor-pointer transition-colors mb-2 ${
                   currentChat?.id === chat.id
-                    ? 'bg-purple-600 text-white'
-                    : 'text-gray-300 hover:bg-slate-700'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
                 }`}
               >
                 <h3 className="font-medium truncate">{chat.title}</h3>
@@ -229,42 +229,34 @@ const ChatbotPage = () => {
       </div>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col bg-white">
         {/* Header */}
-        <div className="bg-slate-800 border-b border-slate-700 p-4 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 text-gray-400 hover:text-white transition-colors"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-              </div>
-              <h1 className="text-white font-semibold">AI ChatBot</h1>
-            </div>
-          </div>
-
-          {/* User Profile */}
+        <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between shadow-sm">
+          {/* Sidebar Toggle */}
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="p-2 text-gray-400 hover:text-purple-600 transition-colors mr-2"
+            title="Toggle sidebar"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <div className="flex-1" />
+          {/* User Profile and Logout */}
           <div className="flex items-center space-x-4">
             <div className="text-right">
-              <p className="text-white text-sm font-medium">{user.name}</p>
-              <p className="text-gray-400 text-xs">{user.email}</p>
+              <p className="text-gray-900 text-sm font-medium">{user?.name}</p>
+              <p className="text-gray-500 text-xs">{user?.email}</p>
             </div>
             <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
               <span className="text-white font-semibold text-sm">
-                {user.name.charAt(0).toUpperCase()}
+                {user?.name?.charAt(0).toUpperCase()}
               </span>
             </div>
             <button
               onClick={handleLogout}
-              className="p-2 text-gray-400 hover:text-white transition-colors"
+              className="p-2 text-gray-400 hover:text-red-500 transition-colors"
               title="Logout"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -274,46 +266,95 @@ const ChatbotPage = () => {
           </div>
         </div>
 
-        {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {!currentChat ? (
-            <div className="h-full flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        {/* Centered Heading and Search Bar */}
+        <div className="flex-1 flex flex-col items-center justify-center">
+          <div className="w-full max-w-xl flex flex-col items-center">
+            <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-2">
+              Have tech questions?
+            </h1>
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-6">
+              Our <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">AI answer engine</span> can help.
+            </h2>
+            <form onSubmit={handleSendMessage} className="w-full flex items-center bg-gray-100 rounded-xl shadow px-4 py-2 mb-8">
+              {/* File Upload Button */}
+              <button
+                type="button"
+                onClick={handleFileUpload}
+                className="p-2 text-gray-400 hover:text-purple-600 transition-colors"
+                title="Attach file"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                </svg>
+              </button>
+              {/* Hidden file input */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                onChange={handleFileSelect}
+                className="hidden"
+                accept="*/*"
+              />
+              <input
+                type="text"
+                value={currentMessage}
+                onChange={(e) => setCurrentMessage(e.target.value)}
+                placeholder="Please ask a question or initiate a search."
+                className="flex-1 bg-transparent border-none outline-none px-4 py-3 text-gray-900 placeholder-gray-400"
+                disabled={isLoading}
+              />
+              <button
+                type="submit"
+                disabled={(!currentMessage.trim() && !selectedFile) || isLoading}
+                className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ml-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </button>
+            </form>
+            {/* Selected file indicator */}
+            {selectedFile && (
+              <div className="w-full mb-4 bg-purple-50 rounded-lg p-2 border border-purple-200 shadow flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
+                  <span className="text-sm text-gray-900">{selectedFile.name}</span>
+                  <span className="text-xs text-gray-400">({(selectedFile.size / 1024).toFixed(1)} KB)</span>
                 </div>
-                <h2 className="text-2xl font-bold text-white mb-2">Welcome to AI ChatBot</h2>
-                <p className="text-gray-400 mb-6">Ask me anything! I'm here to help you with your questions.</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
-                  <div className="p-4 bg-slate-800 rounded-lg border border-slate-700">
-                    <h3 className="text-white font-medium mb-2">💡 Suggestions</h3>
-                    <p className="text-gray-400 text-sm">"How do I build a React app?"</p>
-                  </div>
-                  <div className="p-4 bg-slate-800 rounded-lg border border-slate-700">
-                    <h3 className="text-white font-medium mb-2">🔧 Help</h3>
-                    <p className="text-gray-400 text-sm">"What are JavaScript best practices?"</p>
-                  </div>
-                </div>
+                <button
+                  type="button"
+                  onClick={removeSelectedFile}
+                  className="text-gray-400 hover:text-red-400 transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
-            </div>
-          ) : (
+            )}
+          </div>
+        </div>
+
+        {/* Chat Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
+          {currentChat ? (
             currentChat.messages.map((message) => (
               <div
                 key={message.id}
                 className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                  className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg shadow-md ${
                     message.type === 'user'
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-slate-700 text-gray-200'
+                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                      : 'bg-gray-100 text-gray-900'
                   }`}
                 >
                   <p className="text-sm">{message.content}</p>
                   {message.file && (
-                    <div className="mt-2 p-2 bg-black bg-opacity-20 rounded border border-white border-opacity-20">
+                    <div className="mt-2 p-2 bg-black bg-opacity-10 rounded border border-white border-opacity-10">
                       <div className="flex items-center space-x-2">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
@@ -329,11 +370,11 @@ const ChatbotPage = () => {
                 </div>
               </div>
             ))
-          )}
+          ) : null}
 
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-slate-700 text-gray-200 px-4 py-2 rounded-lg">
+              <div className="bg-gray-100 text-gray-900 px-4 py-2 rounded-lg shadow">
                 <div className="flex items-center space-x-2">
                   <div className="flex space-x-1">
                     <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
@@ -345,77 +386,6 @@ const ChatbotPage = () => {
               </div>
             </div>
           )}
-        </div>
-
-        {/* Message Input */}
-        <div className="p-4 border-t border-slate-700">
-          <form onSubmit={handleSendMessage} className="flex space-x-4">
-            {/* File Upload Button */}
-            <button
-              type="button"
-              onClick={handleFileUpload}
-              className="p-3 text-gray-400 hover:text-white transition-colors"
-              title="Attach file"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-              </svg>
-            </button>
-            
-            {/* Hidden file input */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              onChange={handleFileSelect}
-              className="hidden"
-              accept="*/*"
-            />
-
-            <div className="flex-1 relative">
-              <input
-                type="text"
-                value={currentMessage}
-                onChange={(e) => setCurrentMessage(e.target.value)}
-                placeholder="Ask me anything..."
-                className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                disabled={isLoading}
-              />
-              
-              {/* Selected file indicator */}
-              {selectedFile && (
-                <div className="absolute -top-12 left-0 right-0 bg-slate-700 rounded-lg p-2 border border-slate-600">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <span className="text-sm text-white">{selectedFile.name}</span>
-                      <span className="text-xs text-gray-400">({(selectedFile.size / 1024).toFixed(1)} KB)</span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={removeSelectedFile}
-                      className="text-gray-400 hover:text-red-400 transition-colors"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            <button
-              type="submit"
-              disabled={(!currentMessage.trim() && !selectedFile) || isLoading}
-              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-medium transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </button>
-          </form>
         </div>
       </div>
     </div>
