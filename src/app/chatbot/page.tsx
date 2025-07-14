@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface User {
@@ -14,6 +14,12 @@ interface ChatMessage {
   type: 'user' | 'bot';
   content: string;
   timestamp: Date;
+  file?: {
+    name: string;
+    size: number;
+    type: string;
+    url?: string;
+  };
 }
 
 interface ChatSession {
@@ -26,11 +32,13 @@ interface ChatSession {
 
 const ChatbotPage = () => {
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [user, setUser] = useState<User | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [currentMessage, setCurrentMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [currentChat, setCurrentChat] = useState<ChatSession | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [chatHistory, setChatHistory] = useState<ChatSession[]>([
     {
       id: '1',
@@ -69,24 +77,47 @@ const ChatbotPage = () => {
     router.push('/');
   };
 
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+
+  const handleFileUpload = () => {
+    fileInputRef.current?.click();
+  };
+
+  const removeSelectedFile = () => {
+    setSelectedFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!currentMessage.trim() || isLoading) return;
+    if ((!currentMessage.trim() && !selectedFile) || isLoading) return;
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       type: 'user',
-      content: currentMessage,
-      timestamp: new Date()
+      content: currentMessage || `Uploaded file: ${selectedFile?.name}`,
+      timestamp: new Date(),
+      file: selectedFile ? {
+        name: selectedFile.name,
+        size: selectedFile.size,
+        type: selectedFile.type
+      } : undefined
     };
 
     // Create new chat session if none exists
     if (!currentChat) {
       const newChat: ChatSession = {
         id: Date.now().toString(),
-        title: currentMessage.substring(0, 30) + (currentMessage.length > 30 ? '...' : ''),
+        title: currentMessage.substring(0, 30) + (currentMessage.length > 30 ? '...' : '') || `File: ${selectedFile?.name}`,
         messages: [userMessage],
-        lastMessage: currentMessage,
+        lastMessage: currentMessage || `Uploaded file: ${selectedFile?.name}`,
         timestamp: new Date()
       };
       setCurrentChat(newChat);
@@ -96,7 +127,7 @@ const ChatbotPage = () => {
       const updatedChat = {
         ...currentChat,
         messages: [...currentChat.messages, userMessage],
-        lastMessage: currentMessage,
+        lastMessage: currentMessage || `Uploaded file: ${selectedFile?.name}`,
         timestamp: new Date()
       };
       setCurrentChat(updatedChat);
@@ -106,6 +137,10 @@ const ChatbotPage = () => {
     }
 
     setCurrentMessage('');
+    setSelectedFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
     setIsLoading(true);
 
     // Simulate bot response
@@ -113,7 +148,9 @@ const ChatbotPage = () => {
       const botMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'bot',
-        content: `I understand you're asking about "${userMessage.content}". This is a simulated response from your AI chatbot. In a real implementation, this would connect to your AI service.`,
+        content: selectedFile 
+          ? `I've received your file "${selectedFile.name}" (${(selectedFile.size / 1024).toFixed(1)} KB). This is a simulated response. In a real implementation, I would process this file and provide relevant insights.`
+          : `I understand you're asking about "${userMessage.content}". This is a simulated response from your AI chatbot. In a real implementation, this would connect to your AI service.`,
         timestamp: new Date()
       };
 
@@ -275,6 +312,17 @@ const ChatbotPage = () => {
                   }`}
                 >
                   <p className="text-sm">{message.content}</p>
+                  {message.file && (
+                    <div className="mt-2 p-2 bg-black bg-opacity-20 rounded border border-white border-opacity-20">
+                      <div className="flex items-center space-x-2">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                        </svg>
+                        <span className="text-xs font-medium">{message.file.name}</span>
+                        <span className="text-xs opacity-75">({(message.file.size / 1024).toFixed(1)} KB)</span>
+                      </div>
+                    </div>
+                  )}
                   <p className="text-xs opacity-75 mt-1">
                     {message.timestamp.toLocaleTimeString()}
                   </p>
@@ -302,6 +350,27 @@ const ChatbotPage = () => {
         {/* Message Input */}
         <div className="p-4 border-t border-slate-700">
           <form onSubmit={handleSendMessage} className="flex space-x-4">
+            {/* File Upload Button */}
+            <button
+              type="button"
+              onClick={handleFileUpload}
+              className="p-3 text-gray-400 hover:text-white transition-colors"
+              title="Attach file"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+              </svg>
+            </button>
+            
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              onChange={handleFileSelect}
+              className="hidden"
+              accept="*/*"
+            />
+
             <div className="flex-1 relative">
               <input
                 type="text"
@@ -311,14 +380,39 @@ const ChatbotPage = () => {
                 className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 disabled={isLoading}
               />
+              
+              {/* Selected file indicator */}
+              {selectedFile && (
+                <div className="absolute -top-12 left-0 right-0 bg-slate-700 rounded-lg p-2 border border-slate-600">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span className="text-sm text-white">{selectedFile.name}</span>
+                      <span className="text-xs text-gray-400">({(selectedFile.size / 1024).toFixed(1)} KB)</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={removeSelectedFile}
+                      className="text-gray-400 hover:text-red-400 transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
+            
             <button
               type="submit"
-              disabled={!currentMessage.trim() || isLoading}
+              disabled={(!currentMessage.trim() && !selectedFile) || isLoading}
               className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-medium transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </button>
           </form>
