@@ -30,7 +30,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex justify-between items-center py-8">
@@ -40,12 +40,12 @@ const HomePage = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-white">ChatBot</h1>
+            <h1 className="text-2xl font-bold text-gray-900">ChatBot</h1>
           </div>
           <div className="flex items-center space-x-4">
             {user ? (
               <>
-                <span className="text-gray-300">Welcome, {user.name}</span>
+                <span className="text-gray-700">Welcome, {user.name}</span>
                 <button
                   onClick={handleLogout}
                   className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
@@ -57,7 +57,7 @@ const HomePage = () => {
               <>
                 <Link
                   href="/login"
-                  className="text-gray-300 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
                 >
                   Sign in
                 </Link>
@@ -74,11 +74,11 @@ const HomePage = () => {
 
         {/* Hero Section */}
         <div className="text-center py-20">
-          <h2 className="text-5xl md:text-7xl font-bold text-white mb-6">
+          <h2 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6">
             Your AI
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"> ChatBot</span>
+            <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent"> ChatBot</span>
           </h2>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-12">
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-12">
             Experience the future of conversation with our intelligent chatbot powered by advanced AI technology.
           </p>
           
@@ -92,15 +92,15 @@ const HomePage = () => {
               </Link>
               <Link
                 href="/login"
-                className="border border-gray-600 text-gray-300 hover:text-white hover:border-gray-500 px-8 py-4 rounded-lg text-lg font-medium transition-all"
+                className="border border-gray-300 text-gray-700 hover:text-gray-900 hover:border-gray-400 px-8 py-4 rounded-lg text-lg font-medium transition-all"
               >
                 Sign In
               </Link>
             </div>
           ) : (
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 max-w-2xl mx-auto">
-              <h3 className="text-2xl font-bold text-white mb-4">Ready to Chat?</h3>
-              <p className="text-gray-300 mb-6">Your chatbot is ready to assist you with any questions or tasks.</p>
+            <div className="bg-gray-50 rounded-2xl p-8 max-w-2xl mx-auto border border-gray-200">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to Chat?</h3>
+              <p className="text-gray-600 mb-6">Your chatbot is ready to assist you with any questions or tasks.</p>
               <Link
                 href="/chatbot"
                 className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 rounded-lg font-medium transition-all transform hover:scale-105 inline-block"
@@ -119,8 +119,8 @@ const HomePage = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Lightning Fast</h3>
-            <p className="text-gray-400">Instant responses powered by cutting-edge AI</p>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Lightning Fast</h3>
+            <p className="text-gray-600">Instant responses powered by cutting-edge AI</p>
           </div>
           
           <div className="text-center">
@@ -129,8 +129,8 @@ const HomePage = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Secure & Private</h3>
-            <p className="text-gray-400">Your conversations are protected and confidential</p>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Secure & Private</h3>
+            <p className="text-gray-600">Your conversations are protected and confidential</p>
           </div>
           
           <div className="text-center">
@@ -139,8 +139,8 @@ const HomePage = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Smart & Intuitive</h3>
-            <p className="text-gray-400">Learns from your preferences and adapts</p>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Smart & Intuitive</h3>
+            <p className="text-gray-600">Learns from your preferences and adapts</p>
           </div>
         </div>
       </div>
