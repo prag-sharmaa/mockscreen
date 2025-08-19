@@ -1,0 +1,26 @@
+# Core RAG and LangChain dependencies
+langchain
+langchain-community
+langchain-ollama
+
+# Vector database
+faiss-cpu
+
+# Embeddings
+gpt4all
+
+# PDF processing
+pdfplumber
+
+# Web framework
+fastapi
+uvicorn
+
+# Data processing
+pydantic
+
+# Optional: for better performance with GPU
+# faiss-gpu  # Uncomment if you have CUDA support
+
+# Optional: for development
+# python-multipart  # For file uploads if needed 

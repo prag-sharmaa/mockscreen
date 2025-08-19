@@ -111,6 +111,9 @@ const ChatbotPage = () => {
       } : undefined
     };
 
+    // Track which chat we are appending to
+    let targetChat: ChatSession | null = null;
+
     // Create new chat session if none exists
     if (!currentChat) {
       const newChat: ChatSession = {
@@ -120,6 +123,7 @@ const ChatbotPage = () => {
         lastMessage: currentMessage || `Uploaded file: ${selectedFile?.name}`,
         timestamp: new Date()
       };
+      targetChat = newChat;
       setCurrentChat(newChat);
       setChatHistory(prev => [newChat, ...prev]);
     } else {
@@ -130,6 +134,7 @@ const ChatbotPage = () => {
         lastMessage: currentMessage || `Uploaded file: ${selectedFile?.name}`,
         timestamp: new Date()
       };
+      targetChat = updatedChat;
       setCurrentChat(updatedChat);
       setChatHistory(prev => 
         prev.map(chat => chat.id === currentChat.id ? updatedChat : chat)
@@ -143,31 +148,71 @@ const ChatbotPage = () => {
     }
     setIsLoading(true);
 
-    // Simulate bot response
-    setTimeout(() => {
+    try {
+      // Call the RAG API
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          question: currentMessage || `Process file: ${selectedFile?.name}` 
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`API responded with status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to get response');
+      }
+
       const botMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'bot',
-        content: selectedFile 
-          ? `I've received your file "${selectedFile.name}" (${(selectedFile.size / 1024).toFixed(1)} KB). This is a simulated response. In a real implementation, I would process this file and provide relevant insights.`
-          : `I understand you're asking about "${userMessage.content}". This is a simulated response from your AI chatbot. In a real implementation, this would connect to your AI service.`,
+        content: data.answer,
         timestamp: new Date()
       };
 
-      if (currentChat) {
-        const updatedChat = {
-          ...currentChat,
-          messages: [...currentChat.messages, userMessage, botMessage],
+      // Append bot message to the same target chat (new or existing)
+      if (targetChat) {
+        const updatedTarget: ChatSession = {
+          ...targetChat,
+          messages: [...targetChat.messages, botMessage],
           lastMessage: botMessage.content,
+          timestamp: new Date(),
+        };
+        setCurrentChat(updatedTarget);
+        setChatHistory(prev => prev.map(chat => chat.id === targetChat!.id ? updatedTarget : chat));
+      }
+
+    } catch (error) {
+      console.error('Error calling chat API:', error);
+      
+      // Show error message to user
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'bot',
+        content: `Sorry, I encountered an error: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again or check if the RAG backend is running.`,
+        timestamp: new Date()
+      };
+
+      if (targetChat) {
+        const updatedTarget: ChatSession = {
+          ...targetChat,
+          messages: [...targetChat.messages, errorMessage],
+          lastMessage: errorMessage.content,
           timestamp: new Date()
         };
-        setCurrentChat(updatedChat);
-        setChatHistory(prev => 
-          prev.map(chat => chat.id === currentChat.id ? updatedChat : chat)
-        );
+        setCurrentChat(updatedTarget);
+        setChatHistory(prev => prev.map(chat => chat.id === targetChat!.id ? updatedTarget : chat));
       }
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const selectChat = (chat: ChatSession) => {
