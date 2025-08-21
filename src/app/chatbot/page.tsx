@@ -340,14 +340,14 @@ const ChatbotPage = () => {
                       : 'bg-gray-100 text-gray-900'
                   }`}
                 >
-                  <p className="text-sm">{message.content}</p>
+                  <p className="text-lg">{message.content}</p>
                   {message.file && (
                     <div className="mt-2 p-2 bg-black bg-opacity-10 rounded border border-white border-opacity-10">
                       <div className="flex items-center space-x-2">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                         </svg>
-                        <span className="text-xs font-medium">{message.file.name}</span>
+                        <span className="text-sm font-medium">{message.file.name}</span>
                         <span className="text-xs opacity-75">({(message.file.size / 1024).toFixed(1)} KB)</span>
                       </div>
                     </div>
@@ -369,7 +369,7 @@ const ChatbotPage = () => {
                     <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
                     <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                   </div>
-                  <span className="text-sm">AI is thinking...</span>
+                  <span className="text-lg">AI is thinking...</span>
                 </div>
               </div>
             </div>
