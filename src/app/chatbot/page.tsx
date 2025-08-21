@@ -311,20 +311,22 @@ const ChatbotPage = () => {
           </div>
         </div>
 
-        {/* Centered Heading */}
-        <div className="flex-1 flex flex-col items-center justify-center">
-          <div className="w-full max-w-xl flex flex-col items-center">
-            <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-2">
-              Have tech questions?
-            </h1>
-            <h2 className="text-2xl md:text-3xl font-bold text-center mb-6">
-              Our <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">AI answer engine</span> can help.
-            </h2>
+        {/* Centered Heading - Only show when no chat is active */}
+        {!currentChat && (
+          <div className="flex-1 flex flex-col items-center justify-center">
+            <div className="w-full max-w-xl flex flex-col items-center">
+              <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-2">
+                Have tech questions?
+              </h1>
+              <h2 className="text-2xl md:text-3xl font-bold text-center mb-6">
+                Our <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">AI answer engine</span> can help.
+              </h2>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white pb-32">
           {currentChat ? (
             currentChat.messages.map((message) => (
               <div
